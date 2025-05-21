@@ -32,7 +32,6 @@ A complete Employee Management System built with Node.js, Express.js, and MySQL.
 
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
    cd employee-management-system
    ```
 
@@ -41,24 +40,7 @@ A complete Employee Management System built with Node.js, Express.js, and MySQL.
    npm install
    ```
 
-3. Create a `.env` file in the root directory and add the following:
-   ```
-   PORT=3000
-   NODE_ENV=development
-   SESSION_SECRET=your-super-secret-key
-   DB_HOST=localhost
-   DB_USER=root
-   DB_PASS=your-password
-   DB_NAME=employee_management
-   JWT_SECRET=your-jwt-secret
-   ```
-
-4. Create the database:
-   ```sql
-   CREATE DATABASE employee_management;
-   ```
-
-5. Run the application:
+4. Run the application:
    ```bash
    npm run dev
    ```

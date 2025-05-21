@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= department.name %> - Employee Management System</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- DataTables CSS -->
+    <link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <%- include('../partials/header') %>
+    
+    <div class="container-fluid">
+        <div class="row">
+            <%- include('../partials/sidebar') %>
+            
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+                    <h1 class="h2"><%= department.name %></h1>
+                    <% if (user.role === 'admin' || user.role === 'hr') { %>
+                        <div>
+                            <a href="/departments/<%= department.id %>/edit" class="btn btn-warning">
+                                <i class="fas fa-edit"></i> Edit Department
+                            </a>
+                            <a href="/departments" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Back to Departments
+                            </a>
+                        </div>
+                    <% } %>
+                </div>
+
+                <div class="row">
+                    <!-- Department Information -->
+                    <div class="col-md-4 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Department Information</h5>
+                            </div>
+                            <div class="card-body">
+                                <dl class="row mb-0">
+                                    <dt class="col-sm-4">Status</dt>
+                                    <dd class="col-sm-8">
+                                        <span class="badge bg-<%= department.isActive ? 'success' : 'danger' %>">
+                                            <%= department.isActive ? 'Active' : 'Inactive' %>
+                                        </span>
+                                    </dd>
+
+                                    <dt class="col-sm-4">Manager</dt>
+                                    <dd class="col-sm-8">
+                                        <% if (department.manager) { %>
+                                            <%= department.manager.firstName %> <%= department.manager.lastName %>
+                                        <% } else { %>
+                                            <span class="text-muted">Not assigned</span>
+                                        <% } %>
+                                    </dd>
+
+                                    <dt class="col-sm-4">Budget</dt>
+                                    <dd class="col-sm-8">
+                                        <% if (department.budget) { %>
+                                            $<%= department.budget.toLocaleString() %>
+                                        <% } else { %>
+                                            <span class="text-muted">Not set</span>
+                                        <% } %>
+                                    </dd>
+
+                                    <dt class="col-sm-4">Location</dt>
+                                    <dd class="col-sm-8">
+                                        <%= department.location || 'Not set' %>
+                                    </dd>
+
+                                    <dt class="col-sm-4">Description</dt>
+                                    <dd class="col-sm-8">
+                                        <%= department.description || 'No description available' %>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Department Statistics -->
+                    <div class="col-md-8 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Department Statistics</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card bg-primary text-white">
+                                            <div class="card-body">
+                                                <h6 class="card-title">Total Employees</h6>
+                                                <h2 class="mb-0"><%= department.employees ? department.employees.length : 0 %></h2>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card bg-success text-white">
+                                            <div class="card-body">
+                                                <h6 class="card-title">Active Employees</h6>
+                                                <h2 class="mb-0">
+                                                    <%= department.employees ? department.employees.filter(emp => emp.isActive).length : 0 %>
+                                                </h2>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card bg-info text-white">
+                                            <div class="card-body">
+                                                <h6 class="card-title">Average Salary</h6>
+                                                <h2 class="mb-0">
+                                                    <% 
+                                                        const avgSalary = department.employees && department.employees.length > 0
+                                                            ? department.employees.reduce((sum, emp) => sum + (emp.salary || 0), 0) / department.employees.length
+                                                            : 0;
+                                                    %>
+                                                    $<%= Math.round(avgSalary).toLocaleString() %>
+                                                </h2>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Department Employees -->
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Department Employees</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table id="employeesTable" class="table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Name</th>
+                                                <th>Email</th>
+                                                <th>Designation</th>
+                                                <th>Salary</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% if (department.employees && department.employees.length > 0) { %>
+                                                <% department.employees.forEach(employee => { %>
+                                                    <tr>
+                                                        <td><%= employee.id %></td>
+                                                        <td><%= employee.firstName %> <%= employee.lastName %></td>
+                                                        <td><%= employee.email %></td>
+                                                        <td><%= employee.designation %></td>
+                                                        <td>$<%= employee.salary ? employee.salary.toLocaleString() : '0' %></td>
+                                                        <td>
+                                                            <span class="badge bg-<%= employee.isActive ? 'success' : 'danger' %>">
+                                                                <%= employee.isActive ? 'Active' : 'Inactive' %>
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <a href="/employees/<%= employee.id %>" class="btn btn-sm btn-info">
+                                                                <i class="fas fa-eye"></i>
+                                                            </a>
+                                                            <% if (user.role === 'admin' || user.role === 'hr') { %>
+                                                                <a href="/employees/<%= employee.id %>/edit" class="btn btn-sm btn-warning">
+                                                                    <i class="fas fa-edit"></i>
+                                                                </a>
+                                                            <% } %>
+                                                        </td>
+                                                    </tr>
+                                                <% }); %>
+                                            <% } else { %>
+                                                <tr>
+                                                    <td colspan="7" class="text-center">No employees found in this department</td>
+                                                </tr>
+                                            <% } %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/your-font-awesome-kit.js"></script>
+    
+    <script>
+        $(document).ready(function() {
+            $('#employeesTable').DataTable({
+                responsive: true,
+                order: [[0, 'desc']]
+            });
+        });
+    </script>
+</body>
+</html> 

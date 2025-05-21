@@ -1,7 +1,21 @@
 const express = require('express');
 const router = express.Router();
 const Employee = require('../models/Employee');
+const Department = require('../models/Department');
 const { isAuthenticated, hasRole } = require('../middleware/auth');
+const multer = require('multer');
+const path = require('path');
+
+// Multer setup for file uploads
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'public/uploads/');
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + path.extname(file.originalname));
+    }
+});
+const upload = multer({ storage });
 
 // Get all employees
 router.get('/', isAuthenticated, async (req, res) => {
@@ -22,17 +36,50 @@ router.get('/', isAuthenticated, async (req, res) => {
 });
 
 // Get employee form
-router.get('/create', isAuthenticated, hasRole(['admin', 'hr']), (req, res) => {
-    res.render('employees/create', {
-        title: 'Add New Employee',
-        user: req.session.user
-    });
+router.get('/create', isAuthenticated, hasRole(['admin', 'hr']), async (req, res) => {
+    try {
+        const departments = await Department.findAll();
+        res.render('employees/create', {
+            title: 'Add New Employee',
+            departments,
+            user: req.session.user
+        });
+    } catch (error) {
+        console.error(error);
+        req.flash('error_msg', 'Error loading employee form');
+        res.redirect('/employees');
+    }
 });
 
 // Create employee
-router.post('/', isAuthenticated, hasRole(['admin', 'hr']), async (req, res) => {
+router.post('/', isAuthenticated, hasRole(['admin', 'hr']), upload.single('profilePicture'), async (req, res) => {
     try {
-        await Employee.create(req.body);
+        const {
+            firstName,
+            lastName,
+            email,
+            phone,
+            departmentId,
+            designation,
+            hireDate,
+            salary,
+            address,
+            emergencyContact
+        } = req.body;
+
+        await Employee.create({
+            firstName,
+            lastName,
+            email,
+            phone,
+            departmentId: parseInt(departmentId),
+            designation,
+            hireDate,
+            salary,
+            address,
+            emergencyContact,
+            profilePicture: req.file ? req.file.filename : null
+        });
         req.flash('success_msg', 'Employee added successfully');
         res.redirect('/employees');
     } catch (error) {

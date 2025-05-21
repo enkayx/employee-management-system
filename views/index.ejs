@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Employee Management System</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <%- include('partials/header') %>
+    
+    <div class="container-fluid">
+        <div class="row">
+            <%- include('partials/sidebar') %>
+            
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Dashboard</h1>
+                </div>
+
+                <% if (typeof success_msg !== 'undefined' && success_msg.length > 0) { %>
+                    <div class="alert alert-success"><%= success_msg %></div>
+                <% } %>
+                
+                <% if (typeof error_msg !== 'undefined' && error_msg.length > 0) { %>
+                    <div class="alert alert-danger"><%= error_msg %></div>
+                <% } %>
+
+                <!-- Quick Stats -->
+                <div class="row">
+                    <div class="col-md-3 mb-4">
+                        <div class="card bg-primary text-white">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Employees</h5>
+                                <h2 class="mb-0"><%= stats.totalEmployees || 0 %></h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="card bg-success text-white">
+                            <div class="card-body">
+                                <h5 class="card-title">Active Employees</h5>
+                                <h2 class="mb-0"><%= stats.activeEmployees || 0 %></h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="card bg-info text-white">
+                            <div class="card-body">
+                                <h5 class="card-title">Departments</h5>
+                                <h2 class="mb-0"><%= stats.totalDepartments || 0 %></h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="card bg-warning text-white">
+                            <div class="card-body">
+                                <h5 class="card-title">On Leave</h5>
+                                <h2 class="mb-0"><%= stats.onLeaveEmployees || 0 %></h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activities -->
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Recent Employees</h5>
+                            </div>
+                            <div class="card-body">
+                                <% if (recentEmployees && recentEmployees.length > 0) { %>
+                                    <div class="list-group">
+                                        <% recentEmployees.forEach(employee => { %>
+                                            <a href="/employees/<%= employee.id %>" class="list-group-item list-group-item-action">
+                                                <div class="d-flex w-100 justify-content-between">
+                                                    <h6 class="mb-1"><%= employee.firstName %> <%= employee.lastName %></h6>
+                                                    <small><%= new Date(employee.createdAt).toLocaleDateString() %></small>
+                                                </div>
+                                                <p class="mb-1"><%= employee.designation %></p>
+                                            </a>
+                                        <% }); %>
+                                    </div>
+                                <% } else { %>
+                                    <p class="text-muted">No recent employees</p>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Department Overview</h5>
+                            </div>
+                            <div class="card-body">
+                                <% if (departments && departments.length > 0) { %>
+                                    <div class="list-group">
+                                        <% departments.forEach(department => { %>
+                                            <a href="/departments/<%= department.id %>" class="list-group-item list-group-item-action">
+                                                <div class="d-flex w-100 justify-content-between">
+                                                    <h6 class="mb-1"><%= department.name %></h6>
+                                                    <small><%= department.employees ? department.employees.length : 0 %> employees</small>
+                                                </div>
+                                                <p class="mb-1"><%= department.description || 'No description' %></p>
+                                            </a>
+                                        <% }); %>
+                                    </div>
+                                <% } else { %>
+                                    <p class="text-muted">No departments found</p>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/your-font-awesome-kit.js"></script>
+</body>
+</html> 

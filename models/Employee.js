@@ -25,10 +25,10 @@ const Employee = sequelize.define('Employee', {
     },
     phone: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
-    department: {
-        type: DataTypes.STRING,
+    departmentId: {
+        type: DataTypes.INTEGER,
         allowNull: false
     },
     designation: {
@@ -40,7 +40,7 @@ const Employee = sequelize.define('Employee', {
         allowNull: false
     },
     salary: {
-        type: DataTypes.DECIMAL(10, 2),
+        type: DataTypes.DECIMAL(15, 2),
         allowNull: false
     },
     status: {

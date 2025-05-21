@@ -1,0 +1,90 @@
+/* Custom styles for Employee Management System */
+
+/* Dark mode styles */
+[data-theme="dark"] {
+    background-color: #1a1a1a;
+    color: #ffffff;
+}
+
+[data-theme="dark"] .card {
+    background-color: #2d2d2d;
+    border-color: #404040;
+}
+
+[data-theme="dark"] .form-control {
+    background-color: #333333;
+    border-color: #404040;
+    color: #ffffff;
+}
+
+[data-theme="dark"] .form-control:focus {
+    background-color: #404040;
+    color: #ffffff;
+}
+
+/* General styles */
+.card {
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary {
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+/* Sidebar styles */
+.sidebar {
+    min-height: 100vh;
+    background-color: #f8f9fa;
+    padding: 20px;
+}
+
+[data-theme="dark"] .sidebar {
+    background-color: #2d2d2d;
+}
+
+/* Dashboard card styles */
+.dashboard-card {
+    transition: transform 0.3s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Table styles */
+.table-responsive {
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Form styles */
+.form-control:focus {
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Alert styles */
+.alert {
+    border-radius: 5px;
+    border: none;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+} 

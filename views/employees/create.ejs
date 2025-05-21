@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - Employee Management System</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <%- include('../partials/header') %>
+    
+    <div class="container-fluid">
+        <div class="row">
+            <%- include('../partials/sidebar') %>
+            
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Add New Employee</h1>
+                </div>
+
+                <% if (typeof error_msg !== 'undefined' && error_msg.length > 0) { %>
+                    <div class="alert alert-danger"><%= error_msg %></div>
+                <% } %>
+
+                <div class="card">
+                    <div class="card-body">
+                        <form action="/employees" method="POST" enctype="multipart/form-data">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="firstName" class="form-label">First Name</label>
+                                    <input type="text" class="form-control" id="firstName" name="firstName" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="lastName" class="form-label">Last Name</label>
+                                    <input type="text" class="form-control" id="lastName" name="lastName" required>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email" name="email" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="phone" class="form-label">Phone</label>
+                                    <input type="tel" class="form-control" id="phone" name="phone" required>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="department" class="form-label">Department</label>
+                                    <select class="form-select" id="department" name="department" required>
+                                        <option value="">Select Department</option>
+                                        <option value="HR">Human Resources</option>
+                                        <option value="IT">Information Technology</option>
+                                        <option value="Finance">Finance</option>
+                                        <option value="Marketing">Marketing</option>
+                                        <option value="Operations">Operations</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="designation" class="form-label">Designation</label>
+                                    <select class="form-select" id="designation" name="designation" required>
+                                        <option value="">Select Designation</option>
+                                        <option value="Manager">Manager</option>
+                                        <option value="Senior">Senior</option>
+                                        <option value="Junior">Junior</option>
+                                        <option value="Intern">Intern</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="hireDate" class="form-label">Hire Date</label>
+                                    <input type="date" class="form-control" id="hireDate" name="hireDate" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="salary" class="form-label">Salary</label>
+                                    <input type="number" class="form-control" id="salary" name="salary" step="0.01" required>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="address" class="form-label">Address</label>
+                                <textarea class="form-control" id="address" name="address" rows="3"></textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="emergencyContact" class="form-label">Emergency Contact</label>
+                                <input type="text" class="form-control" id="emergencyContact" name="emergencyContact">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="profilePicture" class="form-label">Profile Picture</label>
+                                <input type="file" class="form-control" id="profilePicture" name="profilePicture" accept="image/*">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="status" class="form-label">Status</label>
+                                <select class="form-select" id="status" name="status" required>
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
+                                    <option value="on_leave">On Leave</option>
+                                </select>
+                            </div>
+
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <a href="/employees" class="btn btn-secondary me-md-2">Cancel</a>
+                                <button type="submit" class="btn btn-primary">Add Employee</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/your-font-awesome-kit.js"></script>
+</body>
+</html> 
